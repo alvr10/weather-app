@@ -8,11 +8,10 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: "var(--color-primary)",
-        secondary: "var(--color-secondary)",
-        text: "var(--color-text)",
-        accent: "var(--color-accent)",
+      boxShadow: {
+        'custom-right-down': '5px 5px 0 var(--color-text)',
+        'custom-right-down-hover-7': '7px 7px 0 var(--color-text)',
+        'custom-right-down-hover': '10px 10px 0 var(--color-text)',
       },
     },
   },
