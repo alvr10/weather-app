@@ -363,7 +363,7 @@ const WeatherApp: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex justify-center items-center align-middle m-0 p-0 mt-4">
+            <div className="flex justify-center items-center align-middle gap-2 m-0 p-0 mt-4">
               <button onClick={() => changeLocale("en")}>🇬🇧</button>
               <button onClick={() => changeLocale("es")}>🇪🇸</button>
               <button onClick={() => changeLocale("pt")}>🇧🇷</button>
