@@ -19,6 +19,7 @@ interface Locale {
   tutorial: string;
   loading: string;
   [key: number]: string;
+  tomorrow: string;
 }
 
 const WeatherApp: React.FC = () => {
@@ -255,7 +256,7 @@ const WeatherApp: React.FC = () => {
         {weatherData ? (
           <div className="w-full h-full flex-grow flex flex-col max-w-auto max-h-auto p-2 align-middle justify-center text-center">
             <h2 className="text-lg font-semibold mb-4 capitalize">
-              {search}, {formatDate(weatherData.current.time)}
+              {search}, {formatDate(weatherData.current.time, lang)}
             </h2>
 
             <div className="relative flex justify-center m-0 p-0">
@@ -332,32 +333,32 @@ const WeatherApp: React.FC = () => {
 
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 p-0">
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>Tomorrow</p>
+                <p>{locale['tomorrow']}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[1], weatherData.daily.time[1])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[1])}º {Math.floor(weatherData.daily.temperature_2m_min[1])}º</p>
               </div>
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>{formatDate(weatherData.daily.time[2])}</p>
+                <p>{formatDate(weatherData.daily.time[2], lang)}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[2], weatherData.daily.time[2])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[2])}º {Math.floor(weatherData.daily.temperature_2m_min[2])}º</p>
               </div>
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>{formatDate(weatherData.daily.time[3])}</p>
+                <p>{formatDate(weatherData.daily.time[3], lang)}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[3], weatherData.daily.time[3])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[3])}º {Math.floor(weatherData.daily.temperature_2m_min[3])}º</p>
               </div>
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>{formatDate(weatherData.daily.time[4])}</p>
+                <p>{formatDate(weatherData.daily.time[4], lang)}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[4], weatherData.daily.time[4])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[4])}º {Math.floor(weatherData.daily.temperature_2m_min[4])}º</p>
               </div>
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>{formatDate(weatherData.daily.time[5])}</p>
+                <p>{formatDate(weatherData.daily.time[5], lang)}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[5], weatherData.daily.time[5])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[5])}º {Math.floor(weatherData.daily.temperature_2m_min[5])}º</p>
               </div>
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
-                <p>{formatDate(weatherData.daily.time[6])}</p>
+                <p>{formatDate(weatherData.daily.time[6], lang)}</p>
                 <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[6], weatherData.daily.time[6])} width={40} height={40} />
                 <p>{Math.floor(weatherData.daily.temperature_2m_max[6])}º {Math.floor(weatherData.daily.temperature_2m_min[6])}º</p>
               </div>

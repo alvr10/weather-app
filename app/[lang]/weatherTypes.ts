@@ -104,10 +104,26 @@ export const getSVGName = (weatherCode: number, currentTime: string) => {
   return `/svg/${weatherName}-${timeOfDay}.svg`;
 };
 
-export function formatDate(dateString: string): string {
+export function formatDate(dateString: string, locale: string): string {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
-  return date.toLocaleDateString('en-US', options);
+
+  let localeString: string;
+  switch (locale) {
+    case 'en':
+      localeString = 'en-US';
+      break;
+    case 'pt':
+      localeString = 'pt-PT';
+      break;
+    case 'es':
+      localeString = 'es-ES';
+      break;
+    default:
+      localeString = 'en-US';  // Valor por defecto, en caso de que ocurra un error
+  }
+
+  return date.toLocaleDateString(localeString, options);
 }
   
 // Function to get weather description by weather code

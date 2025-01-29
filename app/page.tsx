@@ -3,9 +3,12 @@ import Link from 'next/link'
 export default function Home() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center gap-8 p-4">
-      <h1 className="text-4xl font-bold text-center">
-          Welcome to Weather App
-      </h1>
+      <div className='flex flex-col justify-end'>
+        <h1 className="text-4xl font-bold text-center">
+            Simple weather
+        </h1>
+        <p className='text-end text-xs'>By Alvaro Rios</p>
+      </div>
       
       <div className="flex gap-4 w-screen justify-center">
         <Link href="/en" className="transition-transform hover:scale-110">
