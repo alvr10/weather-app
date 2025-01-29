@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 import "./globals.css";
-import { WeatherData, getWeatherDescription, getSVGName, formatDate } from './weatherTypes';
+import { WeatherData, getSVGName, formatDate } from './weatherTypes';
 import { usePathname } from "next/navigation";
 
 interface Coordinates {
@@ -14,7 +14,11 @@ interface Coordinates {
 
 interface Locale {
   hourly: string;
-  // Add other properties as needed
+  footer: string;
+  daily: string;
+  tutorial: string;
+  loading: string;
+  [key: number]: string;
 }
 
 const WeatherApp: React.FC = () => {
@@ -196,20 +200,24 @@ const WeatherApp: React.FC = () => {
     }
   }, [darkMode]);
 
-  if (!locale) {
-    return <div>Loading...</div>;
-  }
+  const getTranslatedWeatherDescription = (code: number): string => {
+    return locale ? locale[code] : 'Unknown weather';
+  };
 
   function changeLocale(newLang: string): void {
     window.location.href = `/${newLang}`;
+  };
+
+  if (!locale) {
+    return <div>Loading...</div>;
   }
 
   return (
     <div
       className={`relative min-h-screen h-auto flex flex-col items-center justify-between backg overflow-x-hidden ${
         darkMode
-          ? "bg-[var(--color-text)] text-[var(--color-primary" // For dark mode, you can keep this or customize with variables
-          : "bg-[var(--color-primary)] text-[var(--color-text)]" // Use the variables for light mode
+          ? "bg-[var(--color-text)] text-[var(--color-primary"
+          : "bg-[var(--color-primary)] text-[var(--color-text)]"
       } font-sans`}
     > 
       <div className="absolute top-0 right-0 h-2/6 w-3/4 max-h-5xl max-w-5xl translate-x-14 -translate-y-14 bg-gradient-custom z-0 rounded-bl-full blur-3xl opacity-70"></div>
@@ -276,7 +284,7 @@ const WeatherApp: React.FC = () => {
             </div>
 
             <p className="font-semibold text-lg">
-              {getWeatherDescription(weatherData.current.weathercode)}, {Math.floor(weatherData.daily.temperature_2m_max[0])}° {Math.floor(weatherData.daily.temperature_2m_min[0])}°
+              {getTranslatedWeatherDescription(weatherData.current.weathercode)}, {Math.floor(weatherData.daily.temperature_2m_max[0])}° {Math.floor(weatherData.daily.temperature_2m_min[0])}°
             </p>
             
             <div className="flex justify-start items-center align-bottom m-0 mt-2 p-0">
@@ -320,7 +328,7 @@ const WeatherApp: React.FC = () => {
               </div>
             </div>
 
-            <h3 className="text-lg font-semibold p-0 m-0 mt-2 text-start">Daily</h3>
+            <h3 className="text-lg font-semibold p-0 m-0 mt-2 text-start">{locale['daily']}</h3>
 
             <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 p-0">
               <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
@@ -355,16 +363,16 @@ const WeatherApp: React.FC = () => {
               </div>
             </div>
 
-            <div>
-              <button onClick={() => changeLocale("pt")}>Português</button>
-              <button onClick={() => changeLocale("es")}>Español</button>
-              <button onClick={() => changeLocale("en")}>English</button>
+            <div className="flex justify-center items-center align-middle m-0 p-0 mt-4">
+              <button onClick={() => changeLocale("en")}>🇬🇧</button>
+              <button onClick={() => changeLocale("es")}>🇪🇸</button>
+              <button onClick={() => changeLocale("pt")}>🇧🇷</button>
             </div>
 
           </div>
         ) : (
           <p className="text-lg text-center">
-            Enter a location and click search to view weather data.
+            {locale['tutorial']}
           </p>
         )}
       </main>
@@ -372,7 +380,7 @@ const WeatherApp: React.FC = () => {
       {/* Footer */}
       <footer className="w-full py-0">
         <p className="text-white my-0 bg-black text-center text-xs">
-          Designed by Alvaro Rios - Innovation through simplicity
+          {locale['footer']}
         </p>
       </footer>
     </div>
