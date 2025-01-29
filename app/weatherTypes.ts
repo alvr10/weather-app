@@ -2,14 +2,15 @@
 export interface WeatherData {
   latitude: number;
   longitude: number;
-  current_weather: {
+  current: {
     time: string;
-    temperature: number;
-    wind_speed: number;
-    wind_direction: number;
-    pressure: number;
-    humidity: number;
-    cloudcover: number;
+    temperature_2m: number;
+    wind_speed_10m: number;
+    wind_direction_10m: number;
+    wind_gusts_10m: number;
+    surface_pressure: number;
+    relative_humidity_2m: number;
+    cloud_cover: number;
     weathercode: number;
   };
   hourly: {
@@ -23,6 +24,7 @@ export interface WeatherData {
     weathercode: number[];
   };
   daily: {
+    weathercode: number[];
     temperature_2m_max: number[];
     temperature_2m_min: number[];
     sunrise: string;
@@ -81,7 +83,7 @@ export const getSVGName = (weatherCode: number, currentTime: string) => {
     73: 'snowflake', // moderate-snow
     75: 'snowflake', // heavy-snow
     77: 'snow', // snow-grains
-    80: 'light-showers-of-rain',
+    80: 'rain', // light-showers-of-rain
     81: 'moderate-showers-of-rain',
     82: 'heavy-showers-of-rain',
     85: 'snow', // light-showers-of-snow
@@ -92,15 +94,21 @@ export const getSVGName = (weatherCode: number, currentTime: string) => {
   };
 
   const [hour] = currentTime.split(':').map(Number);
-  const timeOfDay = (hour >= 6 && hour < 18) ? 'day' : 'night';
+  const timeOfDay = (hour >= 7 && hour <= 19) ? 'day' : 'night';
   const weatherName = weatherNames[weatherCode] || 'unknown';
   
-  if ([55, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86].includes(weatherCode)) {
+  if ([3, 55, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86].includes(weatherCode)) {
     return `/svg/${weatherName}.svg`;
   }
 
   return `/svg/${weatherName}-${timeOfDay}.svg`;
 };
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+  return date.toLocaleDateString('en-US', options);
+}
   
 // Function to get weather description by weather code
 export const getWeatherDescription = (code: number): string => weatherDescriptions[code] || 'Unknown weather';  

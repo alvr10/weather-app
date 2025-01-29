@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import axios from "axios";
 import "./globals.css";
-import { WeatherData, getWeatherDescription, getSVGName } from './weatherTypes';
+import { WeatherData, getWeatherDescription, getSVGName, formatDate } from './weatherTypes';
 
 interface Coordinates {
   latitude: number;
@@ -123,16 +123,15 @@ const WeatherApp: React.FC = () => {
         params: {
           latitude,
           longitude,
-          current_weather: true,
+          current: 'temperature_2m,wind_speed_10m,wind_gusts_10m,relative_humidity_2m,surface_pressure,weathercode',
           hourly: 'temperature_2m,wind_speed_10m,relative_humidity_2m,pressure_msl,cloudcover,precipitation,weathercode',
-          daily: 'temperature_2m_max,temperature_2m_min,sunrise,sunset',
+          daily: 'weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset',
           timezone: 'auto',
         },
       });
   
       console.log(response.data);
   
-      response.data.current_weather.time = formatTime(response.data.current_weather.time);
       setWeatherData(response.data);
       setError(null);
     } catch (error) {
@@ -158,21 +157,15 @@ const WeatherApp: React.FC = () => {
 
   function formatTime(dateString: string): string {
     const date = new Date(dateString);
-    let hours = date.getHours();
+    const hours = date.getHours();
     const minutes = date.getMinutes();
     
-    // Determine AM or PM
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    
-    // Convert hours to 12-hour format
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    
-    // Format minutes to always have two digits
+    // Format hours and minutes to always have two digits
+    const formattedHours = hours < 10 ? `0${hours}` : hours;
     const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
     
-    // Return the formatted time string
-    return `${hours}:${formattedMinutes} ${ampm}`;
+    // Return the formatted time string in 24-hour format
+    return `${formattedHours}:${formattedMinutes}`;
   }
 
   useEffect(() => {
@@ -186,15 +179,16 @@ const WeatherApp: React.FC = () => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col items-center backg ${
+      className={`min-h-screen h-auto flex flex-col items-center justify-between backg ${
         darkMode
           ? "bg-[var(--color-text)] text-[var(--color-primary" // For dark mode, you can keep this or customize with variables
           : "bg-[var(--color-primary)] text-[var(--color-text)]" // Use the variables for light mode
       } font-sans`}
-    >
+    > 
+      <div className="absolute top-0 right-0 h-60 w-60 translate-x-10 -translate-y-10 bg-gradient-custom z-0 rounded-bl-full blur-3xl opacity-80"></div>
 
       {/* Header */}
-      <header className="w-full py-4 px-6 shadow-sm flex justify-between items-center">
+      <header className="w-full py-4 px-6 shadow-sm z-10 flex justify-between items-center">
         <input 
           placeholder="Search"
           onChange={(e) => setSearch(e.target.value)}
@@ -220,58 +214,123 @@ const WeatherApp: React.FC = () => {
       </header>
 
       {/* Main Section */}
-      <main className="flex-grow flex flex-col justify-start w-full px-4">
+      <main className="justify-center z-10 h-full w-full p-0 px-4">
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {weatherData ? (
-          <div className="w-full max-w-xl p-8 text-start">
-            <h2 className="text-8xl">{weatherData.current_weather.temperature}</h2>
-            <h2 className="text-2xl font-semibold mb-4">
-              {weatherData.current_weather.time}
+          <div className="w-full h-full flex-grow flex flex-col max-w-auto max-h-auto p-2 align-middle justify-center text-center">
+            <h2 className="text-lg font-semibold mb-4 capitalize">
+              {search}, {formatDate(weatherData.current.time)}
             </h2>
 
-            <Image alt="Weather Icon" src={getSVGName(weatherData.current_weather.weathercode, weatherData.current_weather.time)} width={100} height={100}></Image>
-            <p>{getWeatherDescription(weatherData.current_weather.weathercode)}</p>
+            <div className="relative flex justify-center m-0 p-0">
+              <h2 className="text-8xl font-bold m-0 p-0">{Math.ceil(weatherData.current.temperature_2m)}</h2>
 
-            <p className="text-lg mb-4">
-              {weatherData.daily.temperature_2m_max[0]}°C / {weatherData.daily.temperature_2m_min[0]}°C
+              <div className="flex flex-col justify-between m-0 py-2">
+                <Image className="image-class m-0 p-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.current.weathercode, weatherData.current.time)} width={40} height={40}></Image>
+                <p className="text-lg  text-center font-semibold p-0">°C</p>
+              </div>
+
+              <div className="flex flex-col justify-between py-2">
+                <div className="flex justify-center items-center align-middle m-0 p-0">
+                  <Image className="self-center m-0 image-class" alt="Weather Icon" src={"/svg/wind.svg"} width={25} height={25} />
+                  <p className="text-xs text-center m-0 p-0">{weatherData.current.wind_speed_10m}km/h</p>
+                </div>
+                <div className="flex justify-center items-center align-middle m-0 p-0">
+                  <Image className="self-center m-0 image-class" alt="Weather Icon" src={"/svg/windsock.svg"} width={25} height={25} />
+                  <p className="text-xs text-center m-0 p-0">{Math.ceil(weatherData.current.wind_gusts_10m)}km/h</p>
+                </div>
+                <div className="flex justify-center items-center align-middle m-0 p-0">
+                  <Image className="self-center m-0 image-class" alt="Weather Icon" src={"/svg/humidity.svg"} width={25} height={25} />
+                  <p className="text-xs text-center m-0 p-0">{weatherData.current.relative_humidity_2m}%</p>
+                </div>
+              </div>
+
+            </div>
+
+            <p className="font-semibold text-lg">
+              {getWeatherDescription(weatherData.current.weathercode)}, {Math.ceil(weatherData.daily.temperature_2m_max[0])}° {Math.ceil(weatherData.daily.temperature_2m_min[0])}°
             </p>
-
-            <div className="flex-col justify-between absolute right-5 top-1/4">
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>Tomorrow</p>
-                <p>{weatherData.daily.temperature_2m_max[1]}°C / {weatherData.daily.temperature_2m_min[1]}°C</p>
+            
+            <div className="flex justify-start items-center align-bottom m-0 mt-2 p-0">
+              <h3 className="text-lg font-semibold p-0 m-0 text-start">Hourly</h3>
+              <Image className="self-center m-0 image-class" alt="Weather Icon" src={"/svg/sunrise.svg"} width={30} height={30} />
+              <p className="text-xs self-center m-0 p-0">{formatTime(weatherData.daily.sunrise[0])}</p>
+              <Image className="self-center m-0 image-class" alt="Weather Icon" src={"/svg/sunset.svg"} width={30} height={30} />
+              <p className="text-xs self-center m-0 p-0">{formatTime(weatherData.daily.sunset[0])}</p>
+            </div>
+            
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 p-0">
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[4])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[4], weatherData.hourly.time[4])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[4])}º</p>
               </div>
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>{weatherData.daily.time[2]}</p>
-                <p>{weatherData.daily.temperature_2m_max[2]}°C / {weatherData.daily.temperature_2m_min[2]}°C</p>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[8])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[8], weatherData.hourly.time[8])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[8])}º</p>
               </div>
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>{weatherData.daily.time[3]}</p>
-                <p>{weatherData.daily.temperature_2m_max[3]}°C / {weatherData.daily.temperature_2m_min[3]}°C</p>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[12])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[12], weatherData.hourly.time[12])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[12])}º</p>
               </div>
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>{weatherData.daily.time[4]}</p>
-                <p>{weatherData.daily.temperature_2m_max[4]}°C / {weatherData.daily.temperature_2m_min[4]}°C</p>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[16])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[16], weatherData.hourly.time[16])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[16])}º</p>
               </div>
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>{weatherData.daily.time[5]}</p>
-                <p>{weatherData.daily.temperature_2m_max[5]}°C / {weatherData.daily.temperature_2m_min[5]}°C</p>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[20])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[20], weatherData.hourly.time[20])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[20])}º</p>
               </div>
-              <div className="flex-col justify-between my-1 bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] 
-              shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2">
-                <p>{weatherData.daily.time[6]}</p>
-                <p>{weatherData.daily.temperature_2m_max[6]}°C / {weatherData.daily.temperature_2m_min[6]}°C</p>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatTime(weatherData.hourly.time[24])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.hourly.weathercode[24], weatherData.hourly.time[24])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.hourly.temperature_2m[24])}º</p>
               </div>
             </div>
+
+            <h3 className="text-lg font-semibold p-0 m-0 mt-2 text-start">Daily</h3>
+
+            <div className="grid grid-cols-3 sm:grid-cols-6 gap-4 p-0">
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>Tomorrow</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[1], weatherData.daily.time[1])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[1])}º {Math.ceil(weatherData.daily.temperature_2m_min[1])}º</p>
+              </div>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatDate(weatherData.daily.time[2])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[2], weatherData.daily.time[2])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[2])}º {Math.ceil(weatherData.daily.temperature_2m_min[2])}º</p>
+              </div>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatDate(weatherData.daily.time[3])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[3], weatherData.daily.time[3])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[3])}º {Math.ceil(weatherData.daily.temperature_2m_min[3])}º</p>
+              </div>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatDate(weatherData.daily.time[4])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[4], weatherData.daily.time[4])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[4])}º {Math.ceil(weatherData.daily.temperature_2m_min[4])}º</p>
+              </div>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatDate(weatherData.daily.time[5])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[5], weatherData.daily.time[5])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[5])}º {Math.ceil(weatherData.daily.temperature_2m_min[5])}º</p>
+              </div>
+              <div className="flex flex-col justify-between bg-[var(--color-primary)] text-[var(--color-text)] border-2 border-[var(--color-text)] shadow-custom-right-down hover:shadow-custom-right-down-hover-7 transition-all duration-300 p-2 w-md">
+                <p>{formatDate(weatherData.daily.time[6])}</p>
+                <Image className="self-center m-0 image-class" alt="Weather Icon" src={getSVGName(weatherData.daily.weathercode[6], weatherData.daily.time[6])} width={40} height={40} />
+                <p>{Math.ceil(weatherData.daily.temperature_2m_max[6])}º {Math.ceil(weatherData.daily.temperature_2m_min[6])}º</p>
+              </div>
+            </div>
+
           </div>
         ) : (
-          <p className="text-lg co">
+          <p className="text-lg text-center">
             Enter a location and click search to view weather data.
           </p>
         )}
@@ -279,10 +338,7 @@ const WeatherApp: React.FC = () => {
 
       {/* Footer */}
       <footer className="w-full py-0">
-        <p className="capitalize text-9xl font-bold m-0 p-0">
-          {search}
-        </p>
-        <p className="text-white my-0 bg-black text-center">
+        <p className="text-white my-0 bg-black text-center text-xs">
           Designed by Alvaro Rios - Innovation through simplicity
         </p>
       </footer>

@@ -8,6 +8,9 @@ export default {
   ],
   theme: {
     extend: {
+      backgroundImage: {
+        'gradient-custom': 'linear-gradient(to bottom left, var(--color-gradient), var(--color-accent))',
+      },
       boxShadow: {
         'custom-right-down': '5px 5px 0 var(--color-text)',
         'custom-right-down-hover-7': '7px 7px 0 var(--color-text)',

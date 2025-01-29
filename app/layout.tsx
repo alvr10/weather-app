@@ -3,7 +3,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "3D Weather App",
+  title: "Simple weather",
   description: "Designed By Alvaro Rios",
 };
 

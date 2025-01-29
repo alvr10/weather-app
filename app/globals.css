@@ -4,18 +4,20 @@
 
 :root {
   --color-primary: #f5f5f5; /* Light gray, Apple-style background */
-  --color-secondary: #007aff; /* Apple blue */
   --color-text: #101010; /* Dark text */
-  --color-accent: #ffffff; /* Pure white */
-  --color-black: #000000; /* Black */
+  --color-accent: #7ae9e9; /* Blue */
+  --color-gradient: #2338af;
 }
 
 .dark-mode {
-  --color-primary: #050505; /* Dark gray */
-  --color-secondary: #007aff; /* Apple blue */
-  --color-text: #cccccc; /* Light text */
-  --color-accent: #000000; /* Black */
-  --color-black: #ffffff; /* White */
+  --color-primary: #101010; /* Dark gray */
+  --color-text: #f5f5f5; /* Light text */
+  --color-accent: #e92727; /* Blue */
+  --color-gradient: #fff170;
+}
+
+.dark-mode .image-class {
+  filter: invert(1);
 }
 
 body {
