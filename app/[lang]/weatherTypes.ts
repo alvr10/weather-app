@@ -64,7 +64,7 @@ export const weatherDescriptions: { [key: number]: string } = {
 };
 
 export const getSVGName = (weatherCode: number, currentTime: string) => {
-  const weatherNames:  { [key: number]: string }  = {
+  const weatherNames: { [key: number]: string } = {
     0: 'clear',
     1: 'clear', // mainly-clear
     2: 'partly-cloudy',
@@ -93,10 +93,14 @@ export const getSVGName = (weatherCode: number, currentTime: string) => {
     99: 'thunderstorms', // thunderstorms-with-heavy-hail
   };
 
-  const [hour] = currentTime.split(':').map(Number);
-  const timeOfDay = (hour >= 7 && hour <= 19) ? 'day' : 'night';
+  const hour = parseInt(currentTime.slice(11, 13), 10);
+  let timeOfDay = (hour >= 7 && hour <= 19) ? 'day' : 'night';
   const weatherName = weatherNames[weatherCode] || 'unknown';
   
+  if (Number.isNaN(hour)) {
+    timeOfDay = 'day';
+  }
+
   if ([3, 55, 61, 63, 65, 66, 67, 71, 73, 75, 77, 80, 81, 82, 85, 86].includes(weatherCode)) {
     return `/svg/${weatherName}.svg`;
   }
@@ -120,7 +124,7 @@ export function formatDate(dateString: string, locale: string): string {
       localeString = 'es-ES';
       break;
     default:
-      localeString = 'en-US';  // Valor por defecto, en caso de que ocurra un error
+      localeString = 'en-US';
   }
 
   return date.toLocaleDateString(localeString, options);

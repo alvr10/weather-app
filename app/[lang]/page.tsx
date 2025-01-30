@@ -153,9 +153,7 @@ const WeatherApp: React.FC = () => {
           timezone: 'auto',
         },
       });
-  
-      console.log(response.data);
-  
+    
       setWeatherData(response.data);
       setError(null);
     } catch (error) {
