@@ -29,5 +29,7 @@
   "95": "Thunderstorms",
   "96": "Thunderstorms with light hail",
   "99": "Thunderstorms with heavy hail",
-  "tomorrow": "Tomorrow"
+  "tomorrow": "Tomorrow",
+  "showless": "Show less",
+  "showmore": "Show more"
 }
