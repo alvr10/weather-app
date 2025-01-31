@@ -10,6 +10,7 @@ export default function Home() {
         <p className='text-end text-xs'>By Alvaro Rios</p>
       </div>
       
+      {/* Languages */}
       <div className="flex gap-4 w-screen justify-center">
         <Link href="/en" className="transition-transform hover:scale-110">
           <h2 className="text-sm text-center bg-[var(--color-primary)] border-2 border-[var(--color-text)] text-[var(--color-text)] outline-none shadow-custom-right-down p-2 hover:shadow-custom-right-down-hover transition-all duration-300">
