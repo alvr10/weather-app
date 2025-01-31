@@ -248,7 +248,17 @@ const WeatherApp: React.FC = () => {
       </header>
 
       {/* Main Section */}
-      <main className="justify-center z-10 h-full w-full p-0 px-4">
+      <body className="justify-center z-10 h-full w-full p-0 px-4">
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3721512724303658"
+          crossOrigin="anonymous"></script>
+      <ins className="adsbygoogle"
+          data-ad-client="ca-pub-3721512724303658"
+          data-ad-slot="7437700991"
+          data-ad-format="auto"
+          data-full-width-responsive="true"></ins>
+      <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {weatherData ? (
@@ -374,7 +384,7 @@ const WeatherApp: React.FC = () => {
             {locale['tutorial']}
           </p>
         )}
-      </main>
+      </body>
 
       {/* Footer */}
       <footer className="w-full py-0">

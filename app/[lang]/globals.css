@@ -144,3 +144,7 @@ input:hover:checked + .slider:before {
     );
   background-size: var(--gap) var(--gap);
 }
+
+.adsbygoogle {
+  display: block;
+}
