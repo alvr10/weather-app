@@ -77,7 +77,6 @@ const WeatherApp: React.FC = () => {
       <div className={`relative min-h-screen h-auto flex flex-col items-center justify-between backgroundpattern overflow-x-hidden ${darkMode ? "bg-[var(--color-text)] text-[var(--color-primary)]" : "bg-[var(--color-primary)] text-[var(--color-text)]"} font-sans`}>
         <Header search={search} setSearch={setSearch} darkMode={darkMode} setDarkMode={setDarkMode} handleSearch={handleSearch} />
         <main className="justify-center z-10 h-full w-full p-0 px-4">
-          <AdComponent adSlot="7437700991" />
           {error && <p className="text-red-500 mb-4">{error}</p>}
           {weatherData ? (
             <>
@@ -105,6 +104,8 @@ const WeatherApp: React.FC = () => {
                 {locale['daily']}</h3>
               <DailyForecast weatherData={weatherData} locale={locale} lang={locale.lang} />
               <LocaleSwitcher changeLocale={changeLocale} />
+
+              <AdComponent adSlot="7437700991" />
             </>
           ) : (
             <p className="text-lg text-center">{locale['tutorial']}</p>

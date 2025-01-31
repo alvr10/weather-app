@@ -164,3 +164,17 @@ input:hover:checked + .slider:before {
 .adsbygoogle {
   display: block;
 }
+
+.ad-container {
+  position: relative;
+  text-align: center;
+}
+
+.ad-fallback {
+  padding: 10px;
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Red border */
+  color: #721c24; /* Dark red text */
+  border-radius: 4px;
+  margin-top: 10px;
+}
