@@ -15,5 +15,5 @@ export const useLocale = () => {
     }
   }, [lang]);
 
-  return locale;
+  return { locale, lang };
 };

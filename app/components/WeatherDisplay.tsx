@@ -2,18 +2,17 @@
 import React from "react";
 import Image from "next/image";
 import { WeatherData } from "../types/weatherTypes";
-import { getSVGName, formatDate } from '../utils/weatherUtils';
-import { getWeatherDescription } from '../constants/weatherCodes';
+import { getSVGName, formatDate, getWeatherDescriptionTranslated } from '../utils/weatherUtils';
 
 interface WeatherDisplayProps {
   weatherData: WeatherData;
   locale: any;
   search: string;
   lang: string;
-  darkMode: boolean; // Add darkMode as a prop
+  darkMode: boolean;
 }
 
-export const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weatherData, search, lang, darkMode }) => {
+export const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weatherData, locale, search, lang, darkMode }) => {
   return (
     <div className={`w-full h-full flex-grow flex flex-col max-w-auto max-h-auto p-2 align-middle justify-center text-center ${darkMode ? "text-[var(--color-text)]" : "text-[var(--color-text)]"}`}>
       {/* Location and Date */}
@@ -88,7 +87,7 @@ export const WeatherDisplay: React.FC<WeatherDisplayProps> = ({ weatherData, sea
 
       {/* Weather Description */}
       <p className="font-semibold text-lg">
-        {getWeatherDescription(weatherData.current.weathercode)}, {Math.floor(weatherData.daily.temperature_2m_max[0])}° {Math.floor(weatherData.daily.temperature_2m_min[0])}°
+        {getWeatherDescriptionTranslated(weatherData.current.weathercode, locale)}, {Math.floor(weatherData.daily.temperature_2m_max[0])}° {Math.floor(weatherData.daily.temperature_2m_min[0])}°
       </p>
     </div>
   );

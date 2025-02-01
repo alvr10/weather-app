@@ -8,7 +8,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ locale }) => {
   return (
     <footer className="w-full py-0">
-      <p className="text-white my-0 bg-black text-center text-xs">
+      <p className="text-white my-0 pb-4 bg-black text-center text-xs">
         {locale['footer']}
       </p>
     </footer>

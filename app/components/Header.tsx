@@ -10,7 +10,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ search, setSearch, darkMode, setDarkMode, handleSearch }) => {
   return (
-    <header className="w-full py-4 px-6 shadow-sm z-10 flex justify-between items-center">
+    <header className="w-full py-4 px-4 shadow-sm z-10 flex justify-between items-center">
       <input 
         placeholder="Search"
         value={search}

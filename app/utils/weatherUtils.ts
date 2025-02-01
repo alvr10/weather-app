@@ -1,12 +1,10 @@
-import { weatherDescriptions } from '../constants/weatherCodes';
-
 // Format date based on locale
-export const formatDate = (dateString: string, locale: string): string => {
+export const formatDate = (dateString: string, lang: string): string => {
   const date = new Date(dateString);
   const options: Intl.DateTimeFormatOptions = { weekday: 'short', day: 'numeric', month: 'short' };
 
   let localeString: string;
-  switch (locale) {
+  switch (lang) {
     case 'en':
       localeString = 'en-US';
       break;
@@ -83,5 +81,5 @@ export const getSVGName = (weatherCode: number, currentTime: string): string => 
 };
 
 // Get weather description by weather code
-export const getWeatherDescription = (code: number): string =>
-  weatherDescriptions[code] || 'Unknown weather';
+export const getWeatherDescriptionTranslated = (code: number, locale: string): string =>
+  locale[code] || 'Unknown weather';

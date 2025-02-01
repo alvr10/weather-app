@@ -11,16 +11,15 @@ import { DailyForecast } from "../components/DailyForecast";
 import { Footer } from "../components/Footer";
 import { LocaleSwitcher } from "../components/LocaleSwitcher";
 import { formatTime } from "../utils/weatherUtils";
-import AdComponent from "../components/AdComponent";
 import Image from "next/image";
 
 const WeatherApp: React.FC = () => {
   const [search, setSearch] = useState("");
   const [darkMode, setDarkMode] = useState(false);
   const { weatherData, error, fetchWeather, fetchCityName, fetchCoordinates } = useWeatherData();
-  const locale = useLocale();
+  const { locale, lang } = useLocale();
 
-  // Apply dark mode to the root element
+  // Apply dark mode to the root element  
   useEffect(() => {
     const rootElement = document.documentElement;
     if (darkMode) {
@@ -81,7 +80,7 @@ const WeatherApp: React.FC = () => {
           {weatherData ? (
             <>
               {/* Current Forecast */}
-              <WeatherDisplay weatherData={weatherData} locale={locale} search={search} lang={locale.lang} darkMode={darkMode} />
+              <WeatherDisplay weatherData={weatherData} locale={locale} search={search} lang={lang} darkMode={darkMode} />
 
               {/* Hourly Forecast */}
               <div className="flex justify-start items-center align-bottom m-0 mt-2 p-0">
@@ -102,10 +101,8 @@ const WeatherApp: React.FC = () => {
               {/* Daily Forecast */}
               <h3 className={`text-lg font-semibold p-0 m-0 mt-2 text-start ${darkMode ? "text-[var(--color-text)]" : "text-[var(--color-text)]"}`}>
                 {locale['daily']}</h3>
-              <DailyForecast weatherData={weatherData} locale={locale} lang={locale.lang} />
+              <DailyForecast weatherData={weatherData} locale={locale} lang={lang} />
               <LocaleSwitcher changeLocale={changeLocale} />
-
-              <AdComponent adSlot="7437700991" />
             </>
           ) : (
             <p className="text-lg text-center">{locale['tutorial']}</p>
